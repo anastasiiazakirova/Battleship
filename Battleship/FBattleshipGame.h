@@ -26,35 +26,23 @@ public:
 	Coordinate Shot;
 	FBattleshipGame();
 	void Reset();
-
 	
-	char CellPrint(int, int, bool) const;
 	void PrintField(bool) const;
-	bool IsCorrectCoordinate(Coordinate) const;
-	bool IsGameLose() const;
-	std::string GatName() const;
-
-	void SetName(std::string);
-
-	bool IsShotHitShip(Coordinate);
-
-	bool FillFieldFromScreen();
-	bool RandFillField();
-	Coordinate SetCoordinate(std::string); //To transform the coordinates of the line in two int
-	
-
-	bool IsShotHappen(Coordinate) const;
-
+	std::string GatName() const;	
 	int GetDestruction() const;
 	int GetWreckedShips() const;
 
-	bool GetShotCoordinate(Coordinate);
+	void SetName(std::string);
+	bool FillFieldFromScreen();
+	bool RandFillField();
 
 	void TakeShotFromScreen();
-	void TakeRandShot();
+	void TakeRandShot();	
 
-
+	bool IsGameLose() const;
+	bool IsShotHappen(Coordinate) const;
 	bool IsShipwrecked(Coordinate);
+
 private:
 	static const int FIELD_SIZE = 10;
 	static const int MAX_DECKS = 4;
@@ -73,8 +61,10 @@ private:
 		FOUR_DECK_SHIP = 4,
 	};
 
-		
+	char CellPrint(int, int, bool) const;
+	bool IsCorrectCoordinate(Coordinate) const;
+	Coordinate SetCoordinate(std::string); //To transform the coordinates of the line in two int
+
 	bool PutShip(int, Coordinate, Coordinate);
-	
 	
 };
