@@ -1,8 +1,6 @@
 #pragma once
 
 #include <string>
-#include <vector>
-
 
 class FBattleshipGame {
 
@@ -45,10 +43,10 @@ public:
 
 private:
 	static const int FIELD_SIZE = 10;
-	static const int MAX_DECKS = 4;
+	static const int MAX_DECKS = 4; //The maximum number of single-deck ships and the maximum number of decks.
 	int TotalCellsShips;
 	int MyField[FIELD_SIZE][FIELD_SIZE];
-	int MyDestruction;
+	int MyDestruction; //Destruction of non-military infrastructure
 	int CellsOfShip;
 	std::string Name;
 	enum EStatusCell {
@@ -62,7 +60,7 @@ private:
 	};
 
 	char CellPrint(int, int, bool) const;
-	bool IsCorrectCoordinate(Coordinate) const;
+	bool IsCorrectCoordinate(Coordinate) const; //Display the error on the screen if it is present
 	Coordinate SetCoordinate(std::string); //To transform the coordinates of the line in two int
 
 	bool PutShip(int, Coordinate, Coordinate);

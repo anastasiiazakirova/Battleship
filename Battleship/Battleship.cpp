@@ -1,13 +1,10 @@
 // Battleship.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-//#pragma once
+// This is the console version of the game Battleship with the computer.
 
 #include <iostream>
 #include <string>
-
 #include <chrono>
 #include <thread>
-
 #include "FBattleshipGame.h"
 
 void PrintIntro();
@@ -51,7 +48,6 @@ void PlayGame()
 		}
 
 	} while (!bGameLose);
-
 }
 
 void PrintIntro() {
@@ -87,6 +83,7 @@ void FillField()
 	std::cout << "Please enter your name: ";
 	std::getline(std::cin, Name);
 	Player.SetName(Name);
+	//Filling the field for the Player
 	do {
 		std::cout << "Please choose the option you want to place your military facilities\n";
 		std::cout << "Enter 1 to deploy troops yourself.\nEnter 2 to place troops randomly.\n";
@@ -108,11 +105,9 @@ void FillField()
 	system("CLS");
 	std::cout << "Congratulations! The field is full. Let's start the game.\n";
 
+	//Filling the field for the Compuer
 	Compuer.RandFillField();
 	Compuer.SetName("Compuer");
-
-
-
 }
 
 bool PlayerShot() {
@@ -122,19 +117,20 @@ bool PlayerShot() {
 	do
 	{
 		do {
+			//Shot and check if Player have already fired at this coordinate
 			std::cout << Player.GatName() << " takes a shot\n";
 			Player.TakeShotFromScreen();
+			//If the shot has already taken place at this coordinate, shoot again
 			bIsShotHappen = Compuer.IsShotHappen(Player.Shot);
 		} while (!bIsShotHappen);
 
-		bIsSuccessfulShot = Compuer.IsShipwrecked(Player.Shot);
-		bGameLose = Compuer.IsGameLose();
+		bIsSuccessfulShot = Compuer.IsShipwrecked(Player.Shot); //If the shot hits the ship, Player fires again
+		bGameLose = Compuer.IsGameLose(); //Checking if the Player has won
 	} while (bIsSuccessfulShot && !bGameLose);
 
 	if (bGameLose) {
-		GameResult(&Player, &Compuer);
+		GameResult(&Player, &Compuer); //Displaying the winner and loser on the screen
 	}
-
 	return bGameLose;
 }
 
@@ -145,29 +141,30 @@ bool CompuerShot() {
 	do
 	{
 		do {
+			//Shot and check if Compuer have already fired at this coordinate
+			//If the shot has already taken place at this coordinate, shoot again
 			std::cout << Compuer.GatName()<< " takes a shot";
+
 			std::this_thread::sleep_for(std::chrono::nanoseconds(10));
-			std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::seconds(1));
+			std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::seconds(2));
 			std::cout << ".";
 			std::this_thread::sleep_for(std::chrono::nanoseconds(10));
-			std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::seconds(1));
+			std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::seconds(2));
 			std::cout << ".";
 			std::this_thread::sleep_for(std::chrono::nanoseconds(10));
-			std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::seconds(1));
+			std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::seconds(2));
 			std::cout << ".";
 
 			Compuer.TakeRandShot();
 			bIsShotHappen = Player.IsShotHappen(Compuer.Shot);
 		} while (!bIsShotHappen);
 
-
-
-		bIsSuccessfulShot = Player.IsShipwrecked(Compuer.Shot);
-		bGameLose = Player.IsGameLose();
+		bIsSuccessfulShot = Player.IsShipwrecked(Compuer.Shot); //If the shot hits the ship, Compuer fires again
+		bGameLose = Player.IsGameLose(); //Checking if the Compuer has won
 	} while (bIsSuccessfulShot && !bGameLose);
 
 	if (bGameLose) {
-		GameResult(&Compuer, &Player);
+		GameResult(&Compuer, &Player); //Displaying the winner and loser on the screen
 	}
 
 	return bGameLose;

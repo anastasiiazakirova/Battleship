@@ -4,12 +4,10 @@
 #include <string>
 #include <cmath>
 #include <ctime>
-#include <algorithm>
 #include "FBattleshipGame.h"
 
 
 FBattleshipGame::FBattleshipGame() { Reset(); }
-
 
 void FBattleshipGame::Reset()
 {
@@ -27,7 +25,7 @@ void FBattleshipGame::Reset()
 	
 	int NumberOfShips = MAX_DECKS;
 	int DecksSips = 1;
-
+	//Counting the number of ships in total.
 	for (int DecksSips = 1; DecksSips <= MAX_DECKS; DecksSips++) {
 		CellsOfShip += (NumberOfShips * DecksSips);
 		NumberOfShips--;
@@ -46,28 +44,6 @@ void FBattleshipGame::SetName(std::string SrtingName)
 	}
 }
 
-char FBattleshipGame::CellPrint(int Y, int X, bool bIsBattle) const
-{
-	if (MyField[Y][X] == EStatusCell::EMPTY_CELL) {
-		return '.';
-	}
-	if (bIsBattle) {
-		if (MyField[Y][X] > EStatusCell::EMPTY_CELL) {
-			return '.';
-		} else if (MyField[Y][X] == EStatusCell::WOUND_SHIP) {
-			return 'X';
-		} else if (MyField[Y][X] == EStatusCell::NOT_WOUND) {
-			return 'o';
-		}
-	}
-	else {
-		if (MyField[Y][X] > EStatusCell::EMPTY_CELL) {
-			return '+';
-		}
-	}
-
-}
-
 void FBattleshipGame::PrintField(bool bIsBattle) const
 {
 	std::cout << "   a b c d e f g h i j\n";
@@ -78,6 +54,30 @@ void FBattleshipGame::PrintField(bool bIsBattle) const
 		}
 		std::cout << std::endl;
 	}
+}
+
+char FBattleshipGame::CellPrint(int Y, int X, bool bIsBattle) const
+{
+	if (MyField[Y][X] == EStatusCell::EMPTY_CELL) {
+		return '.';
+	}
+	if (bIsBattle) {
+		//The results of the shots will be displayed (when the game itself takes place)
+		if (MyField[Y][X] > EStatusCell::EMPTY_CELL) {
+			return '.';
+		} else if (MyField[Y][X] == EStatusCell::WOUND_SHIP) {
+			return 'X';
+		} else if (MyField[Y][X] == EStatusCell::NOT_WOUND) {
+			return 'o';
+		}
+	}
+	else { 
+		//All ships on the field will be displayed (when filled)
+		if (MyField[Y][X] > EStatusCell::EMPTY_CELL) {
+			return '+';
+		}
+	}
+
 }
 
 bool FBattleshipGame::IsCorrectCoordinate(Coordinate CheckingCoordinates) const
@@ -127,6 +127,7 @@ FBattleshipGame::Coordinate FBattleshipGame::SetCoordinate(std::string LineOfCoo
 			return CurrentCoordinate;
 		}
 
+		//Check whether the coordinate is within the field
 		if (CurrentCoordinate.x >= 0 && CurrentCoordinate.x < FIELD_SIZE
 			&& CurrentCoordinate.y >= 0 && CurrentCoordinate.y < FIELD_SIZE) {
 			CurrentCoordinate.status = EStatusCoordinate::OK;
@@ -306,6 +307,7 @@ bool FBattleshipGame::IsShipwrecked(Coordinate ShotCoordinate)
 {
 	bIsBattle = true;
 	if (MyField[ShotCoordinate.y][ShotCoordinate.x] == EMPTY_CELL) {
+		//The shot did not hit ship
 		MyField[ShotCoordinate.y][ShotCoordinate.x] = NOT_WOUND;
 		std::cout << "The shot did not hit the ship.\n";
 		std::cout << "    " << Name <<" field\n";
@@ -314,6 +316,7 @@ bool FBattleshipGame::IsShipwrecked(Coordinate ShotCoordinate)
 		return false;
 	}
 	else if (MyField[ShotCoordinate.y][ShotCoordinate.x] > EMPTY_CELL) {
+		//The shot hits ship.
 		MyField[ShotCoordinate.y][ShotCoordinate.x] = WOUND_SHIP;
 		std::cout << "The shot hit the ship. Shoot again.\n";
 		std::cout << "    " << Name << " field\n";
@@ -337,11 +340,13 @@ std::string FBattleshipGame::GatName() const
 
 int FBattleshipGame::GetDestruction() const
 {
+	//Returns the percentage of shots fired into empty cells
 	return (100 - ((FIELD_SIZE * FIELD_SIZE - TotalCellsShips - MyDestruction) * 100)/(FIELD_SIZE * FIELD_SIZE - TotalCellsShips));
 }
 
 int FBattleshipGame::GetWreckedShips() const
 {
+	//Returns the value in percentage of how many ship decks were destroyed.
 	return ((TotalCellsShips - CellsOfShip) * 100 / TotalCellsShips);
 }
 
